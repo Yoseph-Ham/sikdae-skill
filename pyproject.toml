@@ -1,0 +1,12 @@
+[project]
+name = "sikdae-expense-report"
+version = "2.0.0"
+description = "Claude Skill: 영수증 이미지를 Claude 비전으로 판독해 일 한도 정산 대장(xlsx)을 만든다"
+requires-python = ">=3.11"
+dependencies = [
+    "openpyxl>=3.1.5",
+    "pillow>=11.0.0",
+    "pymupdf>=1.24.0",
+    "python-pptx>=1.0.2",
+]
+# 한도 설정은 표준 라이브러리 json 으로 읽는다 — YAML 파서 의존성이 없다.

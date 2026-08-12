@@ -1,0 +1,94 @@
+# =====================================================================
+#  절대 커밋 금지 — 실제 영수증 / 개인정보 / 산출물
+#  이 블록은 공개 레포에 실명·실제 결제내역이 올라가는 것을 막는다.
+#  새 입력/출력 폴더를 만들 때는 반드시 여기에 먼저 추가할 것.
+# =====================================================================
+
+# 입력 폴더 (실제 영수증 원본)
+receipts/
+receipt/
+input/
+inputs/
+영수증/
+in/
+
+# 출력 폴더 (생성된 정산 대장 — 실명·상호·금액 포함)
+output/
+outputs/
+out/
+결과/
+result/
+results/
+
+# 확장자 단위 차단 — 폴더 밖에 떨어진 파일도 잡는다
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tif
+*.tiff
+*.gif
+*.webp
+*.heic
+*.pdf
+*.pptx
+*.ppt
+*.docx
+
+# 개인 설정 (성명/직책/부서가 들어있다)
+.sikdae_config.json
+config.local.json
+*.local.json
+
+# 판독 결과 중간 산출물 (상호·금액 원문)
+manifest.json
+receipts.json
+*.manifest.json
+*_debug.txt
+*_analysis.txt
+
+# ---------------------------------------------------------------------
+# 예외: samples/ 의 '소스'만 커밋을 허용한다.
+#
+# 일부러 `!samples/**` 같은 통짜 예외를 쓰지 않는다 — 그렇게 두면 누군가
+# samples/ 안에 실제 영수증을 잠깐 복사해 뒀을 때 그대로 커밋돼 버린다.
+# 확장자를 명시한 이 방식이면 이미지는 samples/ 안에 있어도 절대 안 올라간다.
+#
+# 데모 영수증 이미지는 커밋하지 않는다. 아래 명령으로 언제든 재생성된다:
+#   uv run python samples/make_sample_receipts.py --output samples/receipts
+# ---------------------------------------------------------------------
+!samples/
+!samples/*.py
+!samples/*.json
+!samples/*.md
+samples/receipts/
+
+# =====================================================================
+#  일반 개발 산출물
+# =====================================================================
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# 패키징 결과물 (배포용 zip은 빌드 산출물이지 소스가 아니다)
+sikdae-skill.zip
+*.zip
+
+# 에디터 / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

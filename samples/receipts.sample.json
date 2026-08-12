@@ -1,0 +1,44 @@
+[
+  {
+    "date": "2026-07-02",
+    "merchant": "행복분식 테스트점",
+    "amount": 18000,
+    "image_path": "samples/receipts/01_happy_bunsik.png"
+  },
+  {
+    "date": "2026-07-02",
+    "merchant": "카페 하루 (가상)",
+    "amount": 9000,
+    "image_path": "samples/receipts/02_cafe_haru.png"
+  },
+  {
+    "date": "2026-07-03",
+    "merchant": "미래식당 3호점",
+    "amount": 11000,
+    "image_path": "samples/receipts/03_mirae_sikdang.png"
+  },
+  {
+    "date": "2026-07-06",
+    "merchant": "면류연구소 (샘플)",
+    "amount": 13500,
+    "image_path": "samples/receipts/04_noodle_lab.png"
+  },
+  {
+    "date": "2026-07-06",
+    "merchant": "그린샐러드 데모점",
+    "amount": 12000,
+    "image_path": "samples/receipts/05_green_salad.png"
+  },
+  {
+    "date": "2026-05-28",
+    "merchant": "옛날국밥 예시점",
+    "amount": 14000,
+    "image_path": "samples/receipts/06_old_rice.png"
+  },
+  {
+    "date": null,
+    "merchant": "",
+    "amount": null,
+    "image_path": "samples/receipts/07_unreadable.png"
+  }
+]
