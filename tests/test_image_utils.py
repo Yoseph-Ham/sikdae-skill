@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from PIL import Image, ImageDraw  # noqa: E402
 
-from image_utils import trim_margins, add_border  # noqa: E402
+from image_utils import trim_margins, add_border, upright  # noqa: E402
 from test_support import run_test_classes  # noqa: E402
 
 
@@ -86,6 +86,38 @@ class TestTrimMargins:
         assert out.width < img.width or out.height < img.height, out.size
 
 
+class TestUpright:
+    """눕혀서 저장된 스크린샷 세우기.
+
+    PDF 에 넣는 과정에서 세로 스크린샷(1179x2556)이 가로(2556x1179)로 저장되는
+    경우가 있었다. 판독은 되지만 엑셀 영수증 시트에 누워서 들어가 확인이 어렵다.
+    """
+
+    def test_landscape_becomes_portrait(self):
+        img = Image.new("RGB", (2556, 1179), (255, 255, 255))
+        out = upright(img)
+        assert out.height > out.width, out.size
+
+    def test_portrait_left_alone(self):
+        img = Image.new("RGB", (1179, 2556), (255, 255, 255))
+        assert upright(img).size == (1179, 2556)
+
+    def test_near_square_left_alone(self):
+        """정사각형에 가까우면 건드리지 않는다 (판정 근거가 약하다)."""
+        img = Image.new("RGB", (1000, 900), (255, 255, 255))
+        assert upright(img).size == (1000, 900)
+
+    def test_dimensions_are_swapped(self):
+        img = Image.new("RGB", (800, 400), (255, 255, 255))
+        assert upright(img).size == (400, 800)
+
+    def test_content_is_preserved_not_cropped(self):
+        """회전은 잘라내기가 아니다 — 픽셀 수가 유지되어야 한다."""
+        img = _page_with_content(page=(800, 400), box=(100, 100, 200, 200))
+        out = upright(img)
+        assert out.width * out.height == 800 * 400, out.size
+
+
 class TestAddBorder:
     def test_border_increases_size(self):
         img = Image.new("RGB", (100, 100), (255, 255, 255))
@@ -94,4 +126,4 @@ class TestAddBorder:
 
 
 if __name__ == "__main__":
-    sys.exit(0 if run_test_classes(TestTrimMargins, TestAddBorder) else 1)
+    sys.exit(0 if run_test_classes(TestTrimMargins, TestUpright, TestAddBorder) else 1)
