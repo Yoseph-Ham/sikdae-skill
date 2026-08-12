@@ -13,6 +13,7 @@ SUITES = [
     "test_image_utils.py",
     "test_limit_policy.py",
     "test_expense_processor.py",
+    "test_pdf_slices.py",
     "test_prepare_receipts.py",
     "test_generate_excel_cli.py",
 ]
