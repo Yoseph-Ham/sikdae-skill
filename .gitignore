@@ -19,6 +19,14 @@ out/
 결과/
 result/
 results/
+demo_out/
+정산/
+내역서/
+
+# ⚠ 주의: .gitignore 는 '커밋'만 막는다. 이 폴더를 zip 으로 묶어 배포하면
+# 위 폴더에 남아있는 실제 정산서가 그대로 딸려간다.
+# 배포 전에는 반드시 `git archive` 로 추적 중인 파일만 묶을 것:
+#     git archive --format=zip -o sikdae-skill.zip HEAD
 
 # 확장자 단위 차단 — 폴더 밖에 떨어진 파일도 잡는다
 *.xlsx

@@ -183,6 +183,11 @@ uv run python scripts/manage_config.py show-limit --on 2026-07-15
 
 **Sheet 2 (영수증)**: 원본 영수증 이미지가 5열 그리드로 첨부됩니다.
 
+카드사에서 받는 PDF 전표는 A4 한가운데에 영수증이 작게 박혀 있어 그대로 넣으면
+셀의 대부분이 흰 여백입니다. 변환 단계에서 여백을 자동으로 잘라내
+(실측: 면적 100% → 26%) 영수증이 알아볼 수 있는 크기로 들어갑니다.
+어두운 배경의 다크모드 영수증도 동일하게 처리됩니다.
+
 ## 데모 돌려보기
 
 이 레포에는 **실제 영수증이 단 한 장도 들어있지 않습니다.** 데모용 가상 영수증을 직접 생성합니다.
@@ -204,11 +209,12 @@ uv run python scripts/generate_excel.py samples/receipts.sample.json \
 uv run python tests/run_all.py
 ```
 
-71개 테스트 / 5개 스위트:
+82개 테스트 / 6개 스위트:
 
 | 스위트 | 개수 | 검증 내용 |
 |---|---|---|
 | `test_models.py` | 6 | 판독 실패를 0/오늘날짜로 채우지 않는지 |
+| `test_image_utils.py` | 11 | 여백 크롭이 내용을 자르지 않는지, 다크모드·얼룩 내성 |
 | `test_limit_policy.py` | 18 | 날짜 구간 선택, 우선순위, 출처 추적, config 폴백 |
 | `test_expense_processor.py` | 24 | 일자별 합산·한도, 초과분 분리, 확인필요 분류, 이월 금지 |
 | `test_prepare_receipts.py` | 6 | 폴더 스캔, PDF/PPTX 변환, 손상 파일 격리 |
@@ -229,6 +235,7 @@ sikdae-skill/
 │   ├── manage_config.py        인적사항 저장 / 한도 조회 CLI
 │   ├── models.py               ReceiptData
 │   ├── config_store.py         제출자 인적사항
+│   ├── image_utils.py          영수증 여백 크롭
 │   ├── pdf_utils.py            PDF → 텍스트 or 이미지
 │   └── pptx_utils.py           PPTX → 이미지
 ├── tests/
@@ -245,6 +252,16 @@ sikdae-skill/
 - `samples/` 의 상호·금액·카드번호·사업자번호·인명은 **전부 지어낸 것**이며 실존 대상과 무관합니다.
 
 새 입력/출력 폴더를 추가할 때는 `.gitignore` 에 먼저 등록하세요.
+
+### 배포할 때 주의
+
+`.gitignore` 는 **커밋만** 막습니다. 폴더를 통째로 zip 으로 묶으면 무시 대상 파일까지
+그대로 딸려갑니다 — 생성해 둔 실제 정산서가 여기 해당합니다.
+배포용 zip 은 추적 중인 파일만 묶으세요:
+
+```bash
+git archive --format=zip -o sikdae-skill.zip HEAD
+```
 
 ## 라이선스
 
