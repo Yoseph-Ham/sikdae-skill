@@ -109,11 +109,14 @@ class LimitPolicy:
                 return LimitDecision(matched.amount, SOURCE_CONFIG_HISTORY, detail)
 
         # 4·5순위: 기본값
-        detail = (
-            "config.json 기본값"
-            if self._default_source == SOURCE_CONFIG_DEFAULT
-            else "내장 기본값 (config.json 없음)"
-        )
+        # 폴백 사유를 정확히 구분한다. config 가 '깨진' 경우를 '없음'이라고 하면
+        # 사용자가 있지도 않은 파일을 찾으러 다니게 된다.
+        if self._default_source == SOURCE_CONFIG_DEFAULT:
+            detail = "config.json 기본값"
+        elif self.config_error:
+            detail = "내장 기본값 (config.json 을 읽지 못함 — 위 경고 참조)"
+        else:
+            detail = "내장 기본값 (config.json 없음)"
         if receipt_date is None:
             detail += " — 사용일자 미판독이라 구간 적용 불가"
         return LimitDecision(self._default_limit, self._default_source, detail)

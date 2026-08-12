@@ -165,6 +165,24 @@ class TestConfigFallback:
         assert policy.config_error is not None, "깨진 config 를 조용히 넘기면 안 된다"
         assert policy.for_date(date(2026, 7, 1)).amount == BUILTIN_DEFAULT_LIMIT
 
+    def test_corrupt_config_not_described_as_missing(self):
+        """파일이 '깨진' 것과 '없는' 것은 구분해서 알려야 한다.
+
+        깨진 config 를 '없음'이라고 하면 사용자가 있지도 않은 파일을 찾으러 다닌다.
+        """
+        fd, path = tempfile.mkstemp(suffix=".json")
+        os.close(fd)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("{ broken")
+        detail = load_policy(config_path=path).for_date(date(2026, 7, 1)).detail
+        assert "없음" not in detail, detail
+        assert "읽지 못함" in detail, detail
+
+    def test_missing_config_described_as_missing(self):
+        missing = os.path.join(tempfile.gettempdir(), "definitely_not_here_98765.json")
+        detail = load_policy(config_path=missing).for_date(date(2026, 7, 1)).detail
+        assert "없음" in detail, detail
+
     def test_config_without_history_uses_default(self):
         path = _write_config({"daily_limit": {"default": 17000}})
         d = load_policy(config_path=path).for_date(date(2026, 7, 1))
