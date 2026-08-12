@@ -13,6 +13,7 @@ from PIL import Image
 
 from pdf_utils import process_pdf, is_pdf
 from pptx_utils import pptx_to_images, is_pptx
+from image_utils import trim_margins, add_border
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".tiff"}
 
@@ -22,9 +23,15 @@ def is_image(file_path: str) -> bool:
 
 
 def _save_temp_image(img: Image.Image, temp_dir: str) -> str:
+    """변환된 이미지를 임시 PNG 로 저장한다.
+
+    PDF/PPTX 를 페이지째 렌더링하면 영수증 주위에 A4 여백이 그대로 남는다.
+    엑셀 영수증 시트에서 내용이 깨알만하게 보이지 않도록 여백을 잘라낸다.
+    """
+    trimmed = add_border(trim_margins(img))
     filename = f"{uuid.uuid4().hex}.png"
     path = os.path.join(temp_dir, filename)
-    img.convert("RGB").save(path, "PNG")
+    trimmed.convert("RGB").save(path, "PNG")
     return path
 
 

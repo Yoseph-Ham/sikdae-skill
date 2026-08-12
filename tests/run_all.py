@@ -10,6 +10,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 SUITES = [
     "test_models.py",
+    "test_image_utils.py",
     "test_limit_policy.py",
     "test_expense_processor.py",
     "test_prepare_receipts.py",
